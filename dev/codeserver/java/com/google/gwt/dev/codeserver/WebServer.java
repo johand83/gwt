@@ -30,7 +30,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.servlets.GzipFilter;
+import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,11 +46,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * The web server for Super Dev Mode, also known as the code server. The URLs handled include:
@@ -134,7 +134,7 @@ public class WebServer {
         handleRequest(request.getPathInfo(), request, response, logger);
       }
     }), "/*");
-    newHandler.addFilter(GzipFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+    newHandler.setGzipHandler(new GzipHandler());
     newServer.setHandler(newHandler);
     try {
       newServer.start();

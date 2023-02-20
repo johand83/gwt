@@ -15,14 +15,17 @@
  */
 package com.google.gwt.validation.client.spi;
 
+import com.google.gwt.validation.client.impl.GwtClockProvider;
+
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
-
+import jakarta.validation.valueextraction.ValueExtractor;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.MessageInterpolator;
+import jakarta.validation.TraversableResolver;
+import jakarta.validation.ClockProvider;
 /**
  * Only the GWT incompatible parts.
  */
@@ -38,6 +41,16 @@ public final class GwtConfigurationState extends BaseConfigurationState {
   public Set<InputStream> getMappingStreams() {
     throw new UnsupportedOperationException(
         "GWT Validation does not support getMappingStreams");
+  }
+
+  @Override
+  public ClockProvider getClockProvider() {
+    return GwtClockProvider.INSTANCE;
+  }
+
+  @Override
+  public Set<ValueExtractor<?>> getValueExtractors() {
+    return null;
   }
 
 }

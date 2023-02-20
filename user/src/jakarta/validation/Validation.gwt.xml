@@ -14,7 +14,7 @@
   License for the specific language governing permissions and limitations under
   the License.
 -->
-<!-- Includes the javax.validation classes from the source jar  -->
+<!-- Includes the jakarta.validation classes from the source jar  -->
 <module>
   <source path="">
     <exclude name="super/"/>
@@ -22,3 +22,4 @@
   <super-source path="super"/>
   <public path="public" />
 </module>
+

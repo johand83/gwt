@@ -13,40 +13,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.hibernate.validator.engine;
+package jakarta.validation;
 
 import com.google.gwt.user.client.rpc.CustomFieldSerializer;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 
+import java.util.Set;
+
 /**
- * Custom Serializer for {@link PathImpl}.
+ * Custom Serializer for {@link ConstraintViolationException}.
  */
-public class PathImpl_CustomFieldSerializer extends
-    CustomFieldSerializer<PathImpl> {
+public class ConstraintViolationException_CustomFieldSerializer extends
+    CustomFieldSerializer<ConstraintViolationException> {
 
   @SuppressWarnings("unused")
   public static void deserialize(SerializationStreamReader streamReader,
-      PathImpl instance) throws SerializationException {
+      ConstraintViolationException instance) throws SerializationException {
     // no fields
   }
 
-  public static PathImpl instantiate(SerializationStreamReader streamReader)
-      throws SerializationException {
-    String propertyPath = streamReader.readString();
-
-    return PathImpl.createPathFromString(propertyPath);
+  public static ConstraintViolationException instantiate(
+      SerializationStreamReader streamReader) throws SerializationException {
+    String message = streamReader.readString();
+    @SuppressWarnings("unchecked")
+    Set<ConstraintViolation<?>> set = (Set<ConstraintViolation<?>>) streamReader
+        .readObject();
+    return new ConstraintViolationException(message, set);
   }
 
   public static void serialize(SerializationStreamWriter streamWriter,
-      PathImpl instance) throws SerializationException {
-    streamWriter.writeString(instance.toString());
+      ConstraintViolationException instance) throws SerializationException {
+    streamWriter.writeString(instance.getMessage());
+    streamWriter.writeObject(instance.getConstraintViolations());
   }
 
   @Override
   public void deserializeInstance(SerializationStreamReader streamReader,
-      PathImpl instance) throws SerializationException {
+      ConstraintViolationException instance) throws SerializationException {
     deserialize(streamReader, instance);
   }
 
@@ -56,14 +61,14 @@ public class PathImpl_CustomFieldSerializer extends
   }
 
   @Override
-  public PathImpl instantiateInstance(SerializationStreamReader streamReader)
-      throws SerializationException {
+  public ConstraintViolationException instantiateInstance(
+      SerializationStreamReader streamReader) throws SerializationException {
     return instantiate(streamReader);
   }
 
   @Override
   public void serializeInstance(SerializationStreamWriter streamWriter,
-      PathImpl instance) throws SerializationException {
+      ConstraintViolationException instance) throws SerializationException {
     serialize(streamWriter, instance);
   }
 }

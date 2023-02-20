@@ -9,7 +9,7 @@ gwt clients.
     <exclude name="impl/scriptassert/" />
     <exclude name="super/" />
   </source>
-  <source path="engine">
+  <source path="internal/engine">
     <include name="ConstraintViolationImpl*.java"/>
     <include name="ValidationSupport.java"/>
     <include name="NodeImpl.java"/>

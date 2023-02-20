@@ -43,8 +43,8 @@ import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.webapp.ClasspathPattern;
-import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.ClassMatcher;
+import org.eclipse.jetty.webapp.Configurations;
 import org.eclipse.jetty.webapp.WebAppClassLoader;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -350,13 +350,13 @@ public class JettyLauncher extends ServletContainerLauncher {
 
       private static final String META_INF_SERVICES = "META-INF/services/";
 
-      private final ClasspathPattern systemClassesFromWebappFirst = new ClasspathPattern(new String[] {
-          "-javax.servlet.",
+      private final ClassMatcher systemClassesFromWebappFirst = new ClassMatcher(new String[] {
+          "-jakarta.servlet.",
           "-javax.el.",
           "-javax.websocket.",
           "javax.",
       });
-      private final ClasspathPattern allowedFromSystemClassLoader = new ClasspathPattern(new String[] {
+      private final ClassMatcher allowedFromSystemClassLoader = new ClassMatcher(new String[] {
           "org.eclipse.jetty.",
           "javax.websocket.",
           // Jasper
@@ -377,14 +377,18 @@ public class JettyLauncher extends ServletContainerLauncher {
       public Enumeration<URL> getResources(String name) throws IOException {
         // Logic copied from Jetty's WebAppClassLoader, modified to use the system classloader
         // instead of the parent classloader for server classes
-        List<URL> fromParent = WebAppContextWithReload.this.isServerClass(name)
-            ? Collections.<URL>emptyList()
-            : Lists.newArrayList(Iterators.forEnumeration(systemClassLoader.getResources(name)));
-        Iterator<URL> fromWebapp = WebAppContextWithReload.this.isSystemClass(name)
-                && !fromParent.isEmpty()
-            ? Collections.<URL>emptyIterator()
-            : Iterators.forEnumeration(findResources(name));
-        return Iterators.asEnumeration(Iterators.concat(fromWebapp, fromParent.iterator()));
+        try {
+          List<URL> fromParent = WebAppContextWithReload.this.isServerClass(Class.forName(name))
+                  ? Collections.<URL>emptyList()
+                  : Lists.newArrayList(Iterators.forEnumeration(systemClassLoader.getResources(name)));
+          Iterator<URL> fromWebapp = WebAppContextWithReload.this.isSystemClass(Class.forName(name))
+                  && !fromParent.isEmpty()
+                  ? Collections.<URL>emptyIterator()
+                  : Iterators.forEnumeration(findResources(name));
+          return Iterators.asEnumeration(Iterators.concat(fromWebapp, fromParent.iterator()));
+        } catch (ClassNotFoundException ce) {
+          throw new IOException(ce);
+        }
       }
 
       @Override
@@ -398,14 +402,18 @@ public class JettyLauncher extends ServletContainerLauncher {
 
         // For a system path, load from the outside world.
         // Note: bootstrap has already been searched, so javax. classes should be
-        // tried from the webapp first (except for javax.servlet and javax.el).
+        // tried from the webapp first (except for jakarta.servlet and javax.el).
         URL found;
-        if (WebAppContextWithReload.this.isSystemClass(checkName)
-                && !systemClassesFromWebappFirst.match(checkName)) {
-          found = systemClassLoader.getResource(name);
-          if (found != null) {
-            return found;
+        try {
+          if (WebAppContextWithReload.this.isSystemClass(Class.forName(checkName))
+                  && !systemClassesFromWebappFirst.match(checkName)) {
+            found = systemClassLoader.getResource(name);
+            if (found != null) {
+              return found;
+            }
           }
+        } catch (ClassNotFoundException ce) {
+          return null;
         }
 
         // Always check this ClassLoader first.
@@ -416,7 +424,11 @@ public class JettyLauncher extends ServletContainerLauncher {
 
         // See if the outside world has it.
         found = systemClassLoader.getResource(name);
-        if (found == null || WebAppContextWithReload.this.isServerClass(checkName)) {
+        try {
+          if (found == null || WebAppContextWithReload.this.isServerClass(Class.forName(checkName))) {
+            return null;
+          }
+        } catch (ClassNotFoundException ce) {
           return null;
         }
 
@@ -441,8 +453,8 @@ public class JettyLauncher extends ServletContainerLauncher {
       protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // For system path, always prefer the outside world.
         // Note: bootstrap has already been searched, so javax. classes should be
-        // tried from the webapp first (except for javax.servlet).
-        if (WebAppContextWithReload.this.isSystemClass(name)
+        // tried from the webapp first (except for jakarta.servlet).
+        if (WebAppContextWithReload.this.isSystemClass(Class.forName(name))
                 && !systemClassesFromWebappFirst.match(name)) {
           try {
             Class<?> loaded = systemClassLoader.loadClass(name);
@@ -458,7 +470,7 @@ public class JettyLauncher extends ServletContainerLauncher {
           return super.loadClass(name, resolve);
         } catch (ClassNotFoundException e) {
           // Don't allow server classes to be loaded from the outside.
-          if (WebAppContextWithReload.this.isServerClass(name)) {
+          if (WebAppContextWithReload.this.isServerClass(Class.forName(name))) {
             throw e;
           }
         }
@@ -745,11 +757,11 @@ public class JettyLauncher extends ServletContainerLauncher {
     setupConnector(connector, bindAddress, port);
     server.addConnector(connector);
 
-    Configuration.ClassList cl = Configuration.ClassList.setServerDefault(server);
+    Configurations cl = Configurations.setServerDefault(server);
     try {
       // from jetty-plus.xml
       Thread.currentThread().getContextClassLoader().loadClass("org.eclipse.jetty.plus.webapp.PlusConfiguration");
-      cl.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration",
+      cl.add("org.eclipse.jetty.webapp.FragmentConfiguration",
           "org.eclipse.jetty.plus.webapp.EnvConfiguration",
           "org.eclipse.jetty.plus.webapp.PlusConfiguration");
     } catch (ClassNotFoundException cnfe) {
@@ -759,7 +771,7 @@ public class JettyLauncher extends ServletContainerLauncher {
       // from jetty-annotations.xml
       Thread.currentThread().getContextClassLoader()
           .loadClass("org.eclipse.jetty.annotations.AnnotationConfiguration");
-      cl.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
+      cl.add("org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
           "org.eclipse.jetty.annotations.AnnotationConfiguration");
     } catch (ClassNotFoundException cnfe) {
       logger.log(TreeLogger.Type.DEBUG, "jetty-annotations isn't on the classpath, annotation scanning won't work. This might also affect annotations scanning.");
@@ -819,7 +831,7 @@ public class JettyLauncher extends ServletContainerLauncher {
       if (sslLogger.isLoggable(TreeLogger.TRACE)) {
         sslLogger.log(TreeLogger.TRACE, "Using keystore " + keyStore);
       }
-      SslContextFactory ssl = new SslContextFactory();
+      SslContextFactory.Server ssl = new SslContextFactory.Server();
       if (clientAuth != null) {
         switch (clientAuth) {
           case NONE:

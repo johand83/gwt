@@ -13,45 +13,40 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package javax.validation;
+package org.hibernate.validator.internal.engine;
 
 import com.google.gwt.user.client.rpc.CustomFieldSerializer;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 
-import java.util.Set;
-
 /**
- * Custom Serializer for {@link ConstraintViolationException}.
+ * Custom Serializer for {@link PathImpl}.
  */
-public class ConstraintViolationException_CustomFieldSerializer extends
-    CustomFieldSerializer<ConstraintViolationException> {
+public class PathImpl_CustomFieldSerializer extends
+    CustomFieldSerializer<org.hibernate.validator.internal.engine.path.PathImpl> {
 
   @SuppressWarnings("unused")
   public static void deserialize(SerializationStreamReader streamReader,
-      ConstraintViolationException instance) throws SerializationException {
+                                 org.hibernate.validator.internal.engine.path.PathImpl instance) throws SerializationException {
     // no fields
   }
 
-  public static ConstraintViolationException instantiate(
-      SerializationStreamReader streamReader) throws SerializationException {
-    String message = streamReader.readString();
-    @SuppressWarnings("unchecked")
-    Set<ConstraintViolation<?>> set = (Set<ConstraintViolation<?>>) streamReader
-        .readObject();
-    return new ConstraintViolationException(message, set);
+  public static org.hibernate.validator.internal.engine.path.PathImpl instantiate(SerializationStreamReader streamReader)
+      throws SerializationException {
+    String propertyPath = streamReader.readString();
+
+    return org.hibernate.validator.internal.engine.path.PathImpl.createPathFromString(propertyPath);
   }
 
   public static void serialize(SerializationStreamWriter streamWriter,
-      ConstraintViolationException instance) throws SerializationException {
-    streamWriter.writeString(instance.getMessage());
-    streamWriter.writeObject(instance.getConstraintViolations());
+      org.hibernate.validator.internal.engine.path.PathImpl instance) throws SerializationException {
+    streamWriter.writeString(instance.toString());
   }
 
   @Override
   public void deserializeInstance(SerializationStreamReader streamReader,
-      ConstraintViolationException instance) throws SerializationException {
+      org.hibernate.validator.internal.engine.path.PathImpl instance) throws SerializationException {
     deserialize(streamReader, instance);
   }
 
@@ -61,14 +56,14 @@ public class ConstraintViolationException_CustomFieldSerializer extends
   }
 
   @Override
-  public ConstraintViolationException instantiateInstance(
-      SerializationStreamReader streamReader) throws SerializationException {
+  public org.hibernate.validator.internal.engine.path.PathImpl instantiateInstance(SerializationStreamReader streamReader)
+      throws SerializationException {
     return instantiate(streamReader);
   }
 
   @Override
   public void serializeInstance(SerializationStreamWriter streamWriter,
-      ConstraintViolationException instance) throws SerializationException {
+      org.hibernate.validator.internal.engine.path.PathImpl instance) throws SerializationException {
     serialize(streamWriter, instance);
   }
 }

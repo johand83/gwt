@@ -15,8 +15,8 @@
  */
 package com.google.gwt.validation.client.impl;
 
-import javax.validation.MessageInterpolator.Context;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.MessageInterpolator.Context;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 /**
  * Implementation of {@link Context}.
@@ -39,5 +39,14 @@ public final class MessageInterpolatorContextImpl implements Context {
   @Override
   public Object getValidatedValue() {
     return value;
+  }
+
+  @Override
+  public <T> T unwrap(Class<T> type) {
+    //allow unwrapping into public super types
+    if (type.isAssignableFrom(Context.class)) {
+      return type.cast(this);
+    }
+    return null;
   }
 }

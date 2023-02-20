@@ -79,19 +79,19 @@
                 <version>2.0.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>3.1.0</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>5.0.0</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
+                <groupId>jakarta.validation</groupId>
                 <artifactId>validation-api</artifactId>
-                <version>1.0.0.GA</version>
+                <version>3.0.2</version>
             </dependency>
             <dependency>
-                <groupId>javax.validation</groupId>
+                <groupId>jakarta.validation</groupId>
                 <artifactId>validation-api</artifactId>
-                <version>1.0.0.GA</version>
+                <version>3.0.2</version>
                 <!-- Note: use classifier=sources rather than type=java-sources so they're added to the classpath -->
                 <classifier>sources</classifier>
             </dependency>

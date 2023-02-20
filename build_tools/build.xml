@@ -10,7 +10,9 @@
     <gwt.ant dir="doctool" />
   </target>
 
-  <target name="-do" depends="doctool" description="Run all subprojects"/>
+<!-- Java17 deprecated sun.javadoc stuff here -->
+<!--  <target name="-do" depends="doctool" description="Run all subprojects"/>-->
+  <target name="-do" description="Run all subprojects"/>
   
   <target name="build" description="Builds GWT">
     <antcall target="-do">

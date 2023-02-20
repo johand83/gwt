@@ -14,7 +14,7 @@
  * the License.
  */
 
-package org.hibernate.validator.engine;
+package org.hibernate.validator.internal.engine;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -43,7 +43,7 @@ public class ValidationSupport implements IsSerializable {
   private ConstraintViolationImpl<?> constraintViolationImpl;
 
   @SuppressWarnings("unused")
-  private PathImpl pathIpml;
+  private org.hibernate.validator.internal.engine.path.PathImpl pathIpml;
 
   @SuppressWarnings("unused")
   private HashSet<?> hashSet;
