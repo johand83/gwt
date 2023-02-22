@@ -6,7 +6,7 @@
 /build/
 # Generated poms
 /maven/poms/**/pom.xml
-
+/maven/google-poms/**/pom.xml
 # Ignore all IDEA files
 *.iml
 *.idea

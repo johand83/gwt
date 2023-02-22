@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>jakarta.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <artifactId>jakarta.validation-api</artifactId>
             <!-- needed by RequestFactory -->
             <optional>true</optional>
         </dependency>

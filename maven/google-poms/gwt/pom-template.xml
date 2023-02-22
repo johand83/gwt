@@ -85,12 +85,12 @@
             </dependency>
             <dependency>
                 <groupId>jakarta.validation</groupId>
-                <artifactId>validation-api</artifactId>
+                <artifactId>jakarta.validation-api</artifactId>
                 <version>3.0.2</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.validation</groupId>
-                <artifactId>validation-api</artifactId>
+                <artifactId>jakarta.validation-api</artifactId>
                 <version>3.0.2</version>
                 <!-- Note: use classifier=sources rather than type=java-sources so they're added to the classpath -->
                 <classifier>sources</classifier>

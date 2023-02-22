@@ -25,7 +25,7 @@
             <dependency>
                 <groupId>com.google.web.bindery</groupId>
                 <artifactId>requestfactory-apt</artifactId>
-                <version>2.10.0</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.gwtproject.web.bindery</groupId>
@@ -35,7 +35,7 @@
             <dependency>
                 <groupId>com.google.web.bindery</groupId>
                 <artifactId>requestfactory-client</artifactId>
-                <version>2.10.0</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.gwtproject.web.bindery</groupId>
@@ -45,7 +45,7 @@
             <dependency>
                 <groupId>com.google.web.bindery</groupId>
                 <artifactId>requestfactory-server</artifactId>
-                <version>2.10.0</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.gwtproject.web.bindery</groupId>
@@ -54,8 +54,8 @@
             </dependency>
             <dependency>
                 <groupId>jakarta.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>1.0.0.GA</version>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>3.0.2</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
