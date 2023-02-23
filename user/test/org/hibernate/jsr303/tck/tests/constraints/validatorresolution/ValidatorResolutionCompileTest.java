@@ -59,8 +59,8 @@ public class ValidatorResolutionCompileTest extends TckCompileTestCase {
       throws UnableToCompleteException {
     assertBeanValidatorFailsToCompile(UnexpectedTypeValidator.class, Bar.class,
         ValidationException.class, Pattern.compile(
-        "No \\@javax\\.validation\\.constraints\\.Size\\("
-            + "((\\s)*(message=\\{javax\\.validation\\.constraints\\.Size\\.message\\}|"
+        "No \\@jakarta\\.validation\\.constraints\\.Size\\("
+            + "((\\s)*(message=\\{jakarta\\.validation\\.constraints\\.Size\\.message\\}|"
             + "min=0|max=2147483647|payload=\\[\\]|groups=\\[\\])(,)?){5}"
             + "\\) "
             + "ConstraintValidator for type class java\\.lang\\.Integer"));

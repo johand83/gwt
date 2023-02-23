@@ -69,6 +69,7 @@
     <pathelement location="${gwt.tools.lib}/objenesis/objenesis-1.2.jar"/>
     <pathelement location="${gwt.tools.lib}/objectweb/asm-9.2/asm-9.2.jar"/>
     <pathelement location="${gwt.tools.lib}/objectweb/asm-9.2/asm-commons-9.2.jar"/>
+    <pathelement location="${gwt.tools.lib}/jakarta/annotation/jakarta.annotation-api-2.1.1.jar"/>
     <pathelement location="${gwt.tools.lib}/jakarta/validation/jakarta.validation-api-3.0.2.jar"/>
     <pathelement location="${gwt.tools.lib}/jakarta/validation/jakarta.validation-api-3.0.2-sources.jar"/>
     <pathelement
@@ -124,6 +125,8 @@
         <!-- The source is included so validation is available from client code -->
         <pathelement
             location="${gwt.tools.lib}/jakarta/validation/jakarta.validation-api-3.0.2-sources.jar"/>
+        <pathelement
+                location="${gwt.tools.lib}/jakarta/annotation/jakarta.annotation-api-2.1.1.jar"/>
         <!-- Hibernate is included until we can provide the super source as an third party jar" -->
         <pathelement
             location="${gwt.tools.lib}/hibernate/validator/hibernate-validator-8.0.0.Final.jar"/>
@@ -208,11 +211,11 @@
   <target name="checkstyle-source" description="Static analysis of source">
     <gwt.checkstyle>
       <fileset dir="src">
-        <exclude name="javax/validation/super/javax/validation/constraints/Pattern.java"/>
-        <exclude name="javax/validation/super/javax/validation/spi/ConfigurationState.java"/>
-        <exclude name="javax/validation/super/javax/validation/MessageInterpolator.java"/>
-        <exclude name="javax/validation/super/javax/validation/Configuration.java"/>
-        <exclude name="javax/validation/super/javax/validation/Validation.java"/>
+        <exclude name="jakarta/validation/super/jakarta/validation/constraints/Pattern.java"/>
+        <exclude name="jakarta/validation/super/jakarta/validation/spi/ConfigurationState.java"/>
+        <exclude name="jakarta/validation/super/jakarta/validation/MessageInterpolator.java"/>
+        <exclude name="jakarta/validation/super/jakarta/validation/Configuration.java"/>
+        <exclude name="jakarta/validation/super/jakarta/validation/Validation.java"/>
         <exclude name="org/hibernate/validator/super/org/hibernate/validator/**/*.java"/>
         <exclude name="org/hibernate/validator/ValidationMessages.java"/>
       </fileset>

@@ -73,7 +73,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- RequestFactory will use JSR 303 javax.validation if you let it -->
+    <!-- RequestFactory will use JSR 303 jakarta.validation if you let it -->
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>validation-api</artifactId>

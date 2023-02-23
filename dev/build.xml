@@ -84,6 +84,7 @@
           <include name="objectweb/asm-9.2/asm-util-9.2.jar"/>
           <include name="guava/guava-19.0/guava-19.0-rebased.jar"/>
           <include name="icu4j/63.1/icu4j.jar"/>
+          <include name="jakarta/annotation/jakarta.annotation-api-2.1.1.jar"/>
           <include name="jetty/jetty-11.0.13/jetty-annotations-11.0.13.jar"/>
           <include name="jetty/jetty-11.0.13/jetty-http-11.0.13.jar"/>
           <include name="jetty/jetty-11.0.13/jetty-plus-11.0.13.jar"/>
@@ -154,6 +155,7 @@
               src="${gwt.tools.lib}/eclipse/jdtCompilerAdapter_3.17.0.v20190306-2240.jar"/>
           <zipfileset src="${gwt.tools.lib}/guava/guava-19.0/guava-19.0-rebased.jar"/>
           <zipfileset src="${gwt.tools.lib}/icu4j/63.1/icu4j.jar"/>
+          <zipfileset src="${gwt.tools.lib}/jakarta/annotation/jakarta.annotation-api-2.1.1.jar"/>
           <zipfileset src="${gwt.tools.lib}/jetty/jetty-11.0.13/jetty-annotations-11.0.13.jar"/>
           <zipfileset src="${gwt.tools.lib}/jetty/jetty-11.0.13/jetty-http-11.0.13.jar"/>
           <zipfileset src="${gwt.tools.lib}/jetty/jetty-11.0.13/jetty-plus-11.0.13.jar"/>
@@ -264,6 +266,7 @@
             location="${gwt.tools.lib}/eclipse/jdtCompilerAdapter_3.17.0.v20190306-2240.jar"/>
         <pathelement
             location="${gwt.tools.lib}/guava/guava-19.0/guava-19.0-rebased.jar"/>
+        <pathelement location="${gwt.tools.lib}/jakarta/annotation/jakarta.annotation-api-2.1.1.jar"/>
         <pathelement location="${gwt.tools.lib}/gson/gson-2.6.2.jar"/>
         <pathelement location="${gwt.tools.lib}/jscomp/20160315/sourcemap-rebased.jar"/>
         <pathelement location="${gwt.tools.lib}/json/android-sdk-19.1/json-android-rebased.jar"/>
