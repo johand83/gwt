@@ -151,12 +151,12 @@
     <attribute name="release" default="${javac.release}" />
     <attribute name="excludes" default="" />
     <attribute name="processorpath" default="" />
-<!--    <attribute name="errorprone.args" default="" />-->
+    <attribute name="errorprone.args" default="" />
     <element name="javaccontents" implicit="true" optional="true" />
 
     <sequential>
       <path id="mergedprocessorpath.ref">
-<!--        <path refid="errorprone.processorpath.ref"/>-->
+        <path refid="errorprone.processorpath.ref"/>
         <path refid="@{processorpath}" unless:blank="@{processorpath}" />
       </path>
       <mkdir dir="@{destdir}"/>
@@ -178,7 +178,7 @@
         <compilerarg value="-XDcompilePolicy=simple"/>
         <compilerarg value="-processorpath"/>
         <compilerarg pathref="mergedprocessorpath.ref"/>
-<!--        <compilerarg value="-Xplugin:ErrorProne @{errorprone.args}" />-->
+        <compilerarg value="-Xplugin:ErrorProne @{errorprone.args}" />
         <javaccontents />
       </javac>
     </sequential>
