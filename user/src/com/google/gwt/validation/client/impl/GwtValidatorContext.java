@@ -17,11 +17,14 @@ package com.google.gwt.validation.client.impl;
 
 import com.google.gwt.validation.client.AbstractGwtValidatorFactory;
 
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
-import javax.validation.Validator;
-import javax.validation.ValidatorContext;
+import jakarta.validation.valueextraction.ValueExtractor;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.MessageInterpolator;
+import jakarta.validation.TraversableResolver;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ClockProvider;
+import jakarta.validation.ParameterNameProvider;
 
 /**
  * GWT {@link ValidatorContext}.
@@ -91,6 +94,21 @@ public final class GwtValidatorContext implements ValidatorContext {
     } else {
       this.traversableResolver = traversableResolver;
     }
+    return this;
+  }
+
+  @Override
+  public ValidatorContext addValueExtractor(ValueExtractor<?> extractor) {
+    return this;
+  }
+
+  @Override
+  public ValidatorContext clockProvider(ClockProvider clockProvider) {
+    return this;
+  }
+
+  @Override
+  public ValidatorContext parameterNameProvider(ParameterNameProvider parameterNameProvider) {
     return this;
   }
 }

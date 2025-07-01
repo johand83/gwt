@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * Test case for testing Jjs optimizers. Adds a convenient Result class.

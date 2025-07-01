@@ -56,7 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 /**
  * Tests for {@link com.google.web.bindery.requestfactory.shared.RequestFactory}
@@ -99,7 +99,7 @@ public class RequestFactoryTest extends RequestFactoryTestBase {
       assertEquals("userName", error.getPropertyPath().toString());
       assertTrue(THREE.test(error.getMessage()));
       assertTrue(THIRTY.test(error.getMessage()));
-      assertEquals("{javax.validation.constraints.Size.message}", error.getMessageTemplate());
+      assertEquals("{jakarta.validation.constraints.Size.message}", error.getMessageTemplate());
       assertSame(proxy, error.getRootBean());
       assertSame(proxy, error.getLeafBean());
       assertEquals(proxy.stableId().getProxyClass(), error.getRootBeanClass());

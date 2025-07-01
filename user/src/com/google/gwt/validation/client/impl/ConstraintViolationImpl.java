@@ -19,9 +19,9 @@ import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.util.Objects;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Path;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Path;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 /**
  * An implementation of {@link ConstraintViolation}.
@@ -220,5 +220,24 @@ public final class ConstraintViolationImpl<T> implements ConstraintViolation<T>,
         + ", invalidValue=" + invalidValue //
         + ", desc=" + constraintDescriptor //
         + ", elementType=" + elementType + ")";
+  }
+
+  @Override
+  public <T> T unwrap(Class<T> type) {
+    //allow unwrapping into public super types
+    if (type.isAssignableFrom(ConstraintViolation.class)) {
+      return type.cast(this);
+    }
+    return null;
+  }
+
+  @Override
+  public Object getExecutableReturnValue() {
+    return null;
+  }
+
+  @Override
+  public Object[] getExecutableParameters() {
+    return null;
   }
 }

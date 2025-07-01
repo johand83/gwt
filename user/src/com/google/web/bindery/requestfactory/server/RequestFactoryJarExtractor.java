@@ -1061,7 +1061,7 @@ public class RequestFactoryJarExtractor {
     }
     assert type.getInternalName().charAt(0) != 'L';
     if (type.getInternalName().startsWith("java/") ||
-        type.getInternalName().startsWith("javax/") ||
+        type.getInternalName().startsWith("jakarta/") ||
         type.getInternalName().startsWith("jakarta/") ||
         type.getInternalName().startsWith("com/google/gson/")) {
       return toReturn;

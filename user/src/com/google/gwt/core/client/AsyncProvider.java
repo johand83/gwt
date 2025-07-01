@@ -25,7 +25,7 @@ package com.google.gwt.core.client;
  *      public void get(final Callback<T, Throwable> callback) {
  *        GWT.runAsync(new RunAsyncCallback() {
  *          public void onSuccess() {
- *            callback.onSuccess(javax.inject.Provider<T>.get());
+ *            callback.onSuccess(jakarta.inject.Provider<T>.get());
  *          }
  *          public void onFailure(Throwable ex) {
  *            callback.onFailure(ex);

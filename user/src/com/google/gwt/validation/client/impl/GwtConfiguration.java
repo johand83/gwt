@@ -16,10 +16,16 @@
 package com.google.gwt.validation.client.impl;
 
 import com.google.gwt.validation.client.spi.GwtValidationProvider;
+import com.google.gwt.validation.client.impl.GwtClockProvider;
 
 import java.io.InputStream;
 
-import javax.validation.spi.BootstrapState;
+import jakarta.validation.spi.BootstrapState;
+import jakarta.validation.BootstrapConfiguration;
+import jakarta.validation.ClockProvider;
+import jakarta.validation.ParameterNameProvider;
+import jakarta.validation.valueextraction.ValueExtractor;
+import jakarta.validation.valueextraction.ValueExtractorDeclarationException;
 
 /**
  * Extends {@link BaseGwtConfiguration} with just the parts that are not GWT
@@ -38,5 +44,35 @@ public final class GwtConfiguration extends BaseGwtConfiguration {
   @Override
   public GwtConfiguration addMapping(InputStream stream) {
     throw new UnsupportedOperationException("GWT does not support InputStreams");
+  }
+
+  @Override
+  public BootstrapConfiguration getBootstrapConfiguration() {
+    return null;
+  }
+
+  @Override
+  public ClockProvider getDefaultClockProvider() {
+    return GwtClockProvider.INSTANCE;
+  }
+
+  @Override
+  public ParameterNameProvider getDefaultParameterNameProvider() {
+    return null;
+  }
+
+  @Override
+  public GwtConfiguration addValueExtractor(ValueExtractor<?> extractor) {
+    return null;
+  }
+
+  @Override
+  public GwtConfiguration clockProvider(ClockProvider clockProvider) {
+    return null;
+  }
+
+  @Override
+  public GwtConfiguration parameterNameProvider(ParameterNameProvider parameterNameProvider) {
+    return null;
   }
 }

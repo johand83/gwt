@@ -41,8 +41,8 @@ import org.eclipse.jetty.util.preventers.AppContextLeakPreventer;
 import org.eclipse.jetty.util.preventers.DOMLeakPreventer;
 import org.eclipse.jetty.util.preventers.GCThreadLeakPreventer;
 import org.eclipse.jetty.util.preventers.SecurityProviderLeakPreventer;
-import org.eclipse.jetty.webapp.ClasspathPattern;
-import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.ClassMatcher;
+import org.eclipse.jetty.webapp.Configurations;
 import org.eclipse.jetty.webapp.WebAppClassLoader;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -278,15 +278,16 @@ public class JettyLauncher extends ServletContainerLauncher {
 
       private static final String META_INF_SERVICES = "META-INF/services/";
 
-      private final ClasspathPattern systemClassesFromWebappFirst = new ClasspathPattern(new String[] {
-          "-javax.servlet.",
-          "-javax.el.",
-          "-javax.websocket.",
+      private final ClassMatcher systemClassesFromWebappFirst = new ClassMatcher(new String[] {
+          "-jakarta.servlet.",
+          "-jakarta.el.",
+          "-jakarta.websocket.",
           "javax.",
       });
-      private final ClasspathPattern allowedFromSystemClassLoader = new ClasspathPattern(new String[] {
+      private final ClassMatcher allowedFromSystemClassLoader = new ClassMatcher(new String[] {
           "org.eclipse.jetty.",
-          "javax.websocket.",
+          "jakarta.websocket.",
+          "jakarta.xml.bind.",
           // Jasper
           "org.apache.jasper.",
           "org.apache.juli.logging.",
@@ -305,14 +306,18 @@ public class JettyLauncher extends ServletContainerLauncher {
       public Enumeration<URL> getResources(String name) throws IOException {
         // Logic copied from Jetty's WebAppClassLoader, modified to use the system classloader
         // instead of the parent classloader for server classes
-        List<URL> fromParent = WebAppContextWithReload.this.isServerClass(name)
-            ? Collections.<URL>emptyList()
-            : Lists.newArrayList(Iterators.forEnumeration(systemClassLoader.getResources(name)));
-        Iterator<URL> fromWebapp = WebAppContextWithReload.this.isSystemClass(name)
-                && !fromParent.isEmpty()
-            ? Collections.<URL>emptyIterator()
-            : Iterators.forEnumeration(findResources(name));
-        return Iterators.asEnumeration(Iterators.concat(fromWebapp, fromParent.iterator()));
+        try {
+          List<URL> fromParent = WebAppContextWithReload.this.isServerClass(Class.forName(name))
+                  ? Collections.<URL>emptyList()
+                  : Lists.newArrayList(Iterators.forEnumeration(systemClassLoader.getResources(name)));
+          Iterator<URL> fromWebapp = WebAppContextWithReload.this.isSystemClass(Class.forName(name))
+                  && !fromParent.isEmpty()
+                  ? Collections.<URL>emptyIterator()
+                  : Iterators.forEnumeration(findResources(name));
+          return Iterators.asEnumeration(Iterators.concat(fromWebapp, fromParent.iterator()));
+        } catch (ClassNotFoundException ce) {
+          throw new IOException(ce);
+        }
       }
 
       @Override
@@ -326,14 +331,18 @@ public class JettyLauncher extends ServletContainerLauncher {
 
         // For a system path, load from the outside world.
         // Note: bootstrap has already been searched, so javax. classes should be
-        // tried from the webapp first (except for javax.servlet and javax.el).
+        // tried from the webapp first (except for jakarta.servlet and jakarta.el).
         URL found;
-        if (WebAppContextWithReload.this.isSystemClass(checkName)
-                && !systemClassesFromWebappFirst.match(checkName)) {
-          found = systemClassLoader.getResource(name);
-          if (found != null) {
-            return found;
+        try {
+          if (WebAppContextWithReload.this.isSystemClass(Class.forName(checkName))
+                  && !systemClassesFromWebappFirst.match(checkName)) {
+            found = systemClassLoader.getResource(name);
+            if (found != null) {
+              return found;
+            }
           }
+        } catch (ClassNotFoundException ce) {
+          return null;
         }
 
         // Always check this ClassLoader first.
@@ -344,7 +353,11 @@ public class JettyLauncher extends ServletContainerLauncher {
 
         // See if the outside world has it.
         found = systemClassLoader.getResource(name);
-        if (found == null || WebAppContextWithReload.this.isServerClass(checkName)) {
+        try {
+          if (found == null || WebAppContextWithReload.this.isServerClass(Class.forName(checkName))) {
+            return null;
+          }
+        } catch (ClassNotFoundException ce) {
           return null;
         }
 
@@ -369,8 +382,8 @@ public class JettyLauncher extends ServletContainerLauncher {
       protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // For system path, always prefer the outside world.
         // Note: bootstrap has already been searched, so javax. classes should be
-        // tried from the webapp first (except for javax.servlet).
-        if (WebAppContextWithReload.this.isSystemClass(name)
+        // tried from the webapp first (except for jakarta.servlet).
+        if (WebAppContextWithReload.this.isSystemClass(Class.forName(name))
                 && !systemClassesFromWebappFirst.match(name)) {
           try {
             Class<?> loaded = systemClassLoader.loadClass(name);
@@ -386,7 +399,7 @@ public class JettyLauncher extends ServletContainerLauncher {
           return super.loadClass(name, resolve);
         } catch (ClassNotFoundException e) {
           // Don't allow server classes to be loaded from the outside.
-          if (WebAppContextWithReload.this.isServerClass(name)) {
+          if (WebAppContextWithReload.this.isServerClass(Class.forName(name))) {
             throw e;
           }
         }
@@ -597,7 +610,7 @@ public class JettyLauncher extends ServletContainerLauncher {
     Log.setLog(new JettyTreeLogger(branch));
 
     // Force load some JRE singletons that can pin the classloader.
-    jreLeakPrevention(logger);
+//    jreLeakPrevention(logger);
 
     // Turn off XML validation.
     System.setProperty("org.eclipse.jetty.xml.XmlParser.Validating", "false");
@@ -609,11 +622,11 @@ public class JettyLauncher extends ServletContainerLauncher {
     server.addConnector(connector);
     addPreventers(server);
 
-    Configuration.ClassList cl = Configuration.ClassList.setServerDefault(server);
+    Configurations cl = Configurations.setServerDefault(server);
     try {
       // from jetty-plus.xml
       Thread.currentThread().getContextClassLoader().loadClass("org.eclipse.jetty.plus.webapp.PlusConfiguration");
-      cl.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration",
+      cl.add("org.eclipse.jetty.webapp.FragmentConfiguration",
           "org.eclipse.jetty.plus.webapp.EnvConfiguration",
           "org.eclipse.jetty.plus.webapp.PlusConfiguration");
     } catch (ClassNotFoundException cnfe) {
@@ -623,7 +636,7 @@ public class JettyLauncher extends ServletContainerLauncher {
       // from jetty-annotations.xml
       Thread.currentThread().getContextClassLoader()
           .loadClass("org.eclipse.jetty.annotations.AnnotationConfiguration");
-      cl.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
+      cl.add("org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
           "org.eclipse.jetty.annotations.AnnotationConfiguration");
     } catch (ClassNotFoundException cnfe) {
       logger.log(TreeLogger.Type.DEBUG, "jetty-annotations isn't on the classpath, annotation scanning won't work. This might also affect annotations scanning.");
@@ -749,51 +762,60 @@ public class JettyLauncher extends ServletContainerLauncher {
    * This product includes software developed by The Apache Software Foundation
    * (http://www.apache.org/).
    */
-  private void jreLeakPrevention(TreeLogger logger) {
-    /*
-     * Calling getPolicy retains a static reference to the context class loader.
-     */
-    try {
-      // Policy.getPolicy();
-      Class<?> policyClass = Class.forName("javax.security.auth.Policy");
-      Method method = policyClass.getMethod("getPolicy");
-      method.invoke(null);
-    } catch (ClassNotFoundException e) {
-      // Ignore. The class is deprecated.
-    } catch (SecurityException e) {
-      // Ignore. Don't need call to getPolicy() to be successful,
-      // just need to trigger static initializer.
-    } catch (NoSuchMethodException e) {
-      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
-    } catch (IllegalArgumentException e) {
-      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
-    } catch (IllegalAccessException e) {
-      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
-    } catch (InvocationTargetException e) {
-      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
-    }
-
-    /*
-     * Several components end up opening JarURLConnections without first
-     * disabling caching. This effectively locks the file. Whilst more
-     * noticeable and harder to ignore on Windows, it affects all operating
-     * systems.
-     *
-     * Those libraries/components known to trigger this issue include: - log4j
-     * versions 1.2.15 and earlier - javax.xml.bind.JAXBContext.newInstance()
-     */
-
-    // Set the default URL caching policy to not to cache
-    try {
-      // Doesn't matter that this JAR doesn't exist - just as long as
-      // the URL is well-formed
-      URL url = new URL("jar:file://dummy.jar!/");
-      URLConnection uConn = url.openConnection();
-      uConn.setDefaultUseCaches(false);
-    } catch (MalformedURLException e) {
-      logger.log(TreeLogger.ERROR, "jreLeakPrevention.jarUrlConnCacheFail", e);
-    } catch (IOException e) {
-      logger.log(TreeLogger.ERROR, "jreLeakPrevention.jarUrlConnCacheFail", e);
-    }
-  }
+//  private void jreLeakPrevention(TreeLogger logger) {
+//    /*
+//     * Calling getPolicy retains a static reference to the context class loader.
+//     */
+//    try {
+//      // Policy.getPolicy();
+//      Class<?> policyClass = Class.forName("javax.security.auth.Policy");
+//      Method method = policyClass.getMethod("getPolicy");
+//      method.invoke(null);
+//    } catch (ClassNotFoundException e) {
+//      // Ignore. The class is deprecated.
+//    } catch (SecurityException e) {
+//      // Ignore. Don't need call to getPolicy() to be successful,
+//      // just need to trigger static initializer.
+//    } catch (NoSuchMethodException e) {
+//      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
+//    } catch (IllegalArgumentException e) {
+//      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
+//    } catch (IllegalAccessException e) {
+//      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
+//    } catch (InvocationTargetException e) {
+//      logger.log(TreeLogger.WARN, "jreLeakPrevention.authPolicyFail", e);
+//    }
+//
+//    /*
+//     * Creating a MessageDigest during web application startup initializes the
+//     * Java Cryptography Architecture. Under certain conditions this starts a
+//     * Token poller thread with TCCL equal to the web application class loader.
+//     *
+//     * Instead we initialize JCA right now.
+//     */
+//    java.security.Security.getProviders();
+//
+//    /*
+//     * Several components end up opening JarURLConnections without first
+//     * disabling caching. This effectively locks the file. Whilst more
+//     * noticeable and harder to ignore on Windows, it affects all operating
+//     * systems.
+//     *
+//     * Those libraries/components known to trigger this issue include: - log4j
+//     * versions 1.2.15 and earlier - javax.xml.bind.JAXBContext.newInstance()
+//     */
+//
+//    // Set the default URL caching policy to not to cache
+//    try {
+//      // Doesn't matter that this JAR doesn't exist - just as long as
+//      // the URL is well-formed
+//      URL url = new URL("jar:file://dummy.jar!/");
+//      URLConnection uConn = url.openConnection();
+//      uConn.setDefaultUseCaches(false);
+//    } catch (MalformedURLException e) {
+//      logger.log(TreeLogger.ERROR, "jreLeakPrevention.jarUrlConnCacheFail", e);
+//    } catch (IOException e) {
+//      logger.log(TreeLogger.ERROR, "jreLeakPrevention.jarUrlConnCacheFail", e);
+//    }
+//  }
 }

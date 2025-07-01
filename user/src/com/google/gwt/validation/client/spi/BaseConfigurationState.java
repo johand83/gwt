@@ -18,10 +18,11 @@ package com.google.gwt.validation.client.spi;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.MessageInterpolator;
-import javax.validation.TraversableResolver;
-import javax.validation.spi.ConfigurationState;
+import jakarta.validation.ConstraintValidatorFactory;
+import jakarta.validation.MessageInterpolator;
+import jakarta.validation.TraversableResolver;
+import jakarta.validation.spi.ConfigurationState;
+import jakarta.validation.ParameterNameProvider;
 
 /**
  * Base GWT implementation of {@link ConfigurationState}.
@@ -67,6 +68,11 @@ public abstract class BaseConfigurationState implements ConfigurationState {
   public boolean isIgnoreXmlConfiguration() {
     // Always ignore XML
     return false;
+  }
+
+  @Override
+  public ParameterNameProvider getParameterNameProvider() {
+    return null;
   }
 
 }

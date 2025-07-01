@@ -829,7 +829,7 @@ public class ApiCompatibilityChecker extends ToolBase {
 
       @Override
       public String getPurpose() {
-        return "The location of the javax.validation sources";
+        return "The location of the jakarta.validation sources";
       }
 
       @Override
@@ -980,7 +980,7 @@ public class ApiCompatibilityChecker extends ToolBase {
   }
 
   /**
-   * This is a hack to make the ApiChecker able to find the javax.validation
+   * This is a hack to make the ApiChecker able to find the jakarta.validation
    * sources, which we include through an external jar file.
    */
   private Set<Resource> getJavaxValidationCompilationUnits(TreeLogger logger)
@@ -991,18 +991,18 @@ public class ApiCompatibilityChecker extends ToolBase {
           extraSourceJars,
           Collections.singleton(""), 
           new HashSet<String>(Arrays.asList(
-              "javax/validation/Configuration.java",
-              "javax/validation/MessageInterpolator.java",
-              "javax/validation/Validation.java",
-              "javax/validation/ValidatorContext.java",
-              "javax/validation/ValidatorFactory.java",
-              "javax/validation/ValidationProviderResolver.java",
-              "javax/validation/bootstrap/GenericBootstrap.java",
-              "javax/validation/bootstrap/ProviderSpecificBootstrap.java",
-              "javax/validation/constraints/Pattern.java",
-              "javax/validation/spi/BootstrapState.java",
-              "javax/validation/spi/ConfigurationState.java",
-              "javax/validation/spi/ValidationProvider.java")), 
+              "jakarta/validation/Configuration.java",
+              "jakarta/validation/MessageInterpolator.java",
+              "jakarta/validation/Validation.java",
+              "jakarta/validation/ValidatorContext.java",
+              "jakarta/validation/ValidatorFactory.java",
+              "jakarta/validation/ValidationProviderResolver.java",
+              "jakarta/validation/bootstrap/GenericBootstrap.java",
+              "jakarta/validation/bootstrap/ProviderSpecificBootstrap.java",
+              "jakarta/validation/constraints/Pattern.java",
+              "jakarta/validation/spi/BootstrapState.java",
+              "jakarta/validation/spi/ConfigurationState.java",
+              "jakarta/validation/spi/ValidationProvider.java")),
           logger);
       Set<Resource> loaded = extra.getResources();
       System.out.println("Found " + loaded.size() + " new resources");

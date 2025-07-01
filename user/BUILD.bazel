@@ -8,7 +8,7 @@ filegroup(
     name = "java_emul",
     srcs = glob([
         "super/com/google/gwt/emul/java/**/*.java",
-        "super/com/google/gwt/emul/javax/**/*.java",
+        "super/com/google/gwt/emul/jakarta/**/*.java",
         ]),
 )
 

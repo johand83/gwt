@@ -21,12 +21,22 @@ import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.ConstraintValidatorContext;
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext;
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeContextBuilder;
-import javax.validation.ConstraintViolation;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.ClockProvider;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeContextBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.ContainerElementNodeBuilderCustomizableContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.ContainerElementNodeBuilderDefinedContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.ContainerElementNodeContextBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.LeafNodeBuilderCustomizableContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.LeafNodeBuilderDefinedContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.LeafNodeContextBuilder;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderDefinedContext;
+import jakarta.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeContextBuilder;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 /**
  * GWT safe immutable implementation of {@link ConstraintValidatorContext}
@@ -36,9 +46,7 @@ import javax.validation.metadata.ConstraintDescriptor;
  * @param <A> the constraint being validated
  * @param <T> the type of object being validated
  */
-public final class ConstraintValidatorContextImpl<A extends Annotation, T>
-    implements
-    ConstraintValidatorContext {
+public final class ConstraintValidatorContextImpl<A extends Annotation, T> implements ConstraintValidatorContext {
 
   /**
    * Builder for {@link ConstraintValidatorContextImpl}.
@@ -71,6 +79,27 @@ public final class ConstraintValidatorContextImpl<A extends Annotation, T>
       return new NodeBuilderDefinedContextImpl(this, messageTemplate,
           basePath.append(name));
     }
+
+    @Override
+    public NodeBuilderDefinedContext addParameterNode(int index) {
+      return null;
+    }
+
+    @Override
+    public ContainerElementNodeBuilderCustomizableContext addContainerElementNode(String name, Class<?> containerType, Integer typeArgumentIndex) {
+      return null;
+    }
+
+    @Override
+    public LeafNodeBuilderCustomizableContext addBeanNode() {
+      return null;
+    }
+
+    @Override
+    public NodeBuilderCustomizableContext addPropertyNode(String name) {
+      return null;
+    }
+
   }
 
   /**
@@ -104,6 +133,26 @@ public final class ConstraintValidatorContextImpl<A extends Annotation, T>
     public NodeContextBuilder inIterable() {
       return new NodeContextBuilderImpl(path, messageTemplate, parent);
     }
+
+    @Override
+    public ContainerElementNodeBuilderCustomizableContext addContainerElementNode(String name, Class<?> containerType, Integer typeArgumentIndex) {
+      return null;
+    }
+
+    @Override
+    public LeafNodeBuilderCustomizableContext addBeanNode() {
+      return null;
+    }
+
+    @Override
+    public NodeBuilderCustomizableContext addPropertyNode(String name) {
+      return null;
+    }
+
+    @Override
+    public NodeBuilderCustomizableContext inContainer(Class<?> containerClass, Integer typeArgumentIndex) {
+      return null;
+    }
   }
 
   /**
@@ -134,6 +183,22 @@ public final class ConstraintValidatorContextImpl<A extends Annotation, T>
       return new NodeBuilderCustomizableContextImpl(parent, messageTemplate,
           path.append(name));
     }
+
+    @Override
+    public ContainerElementNodeBuilderCustomizableContext addContainerElementNode(String name, Class<?> containerType, Integer typeArgumentIndex) {
+      return null;
+    }
+
+    @Override
+    public LeafNodeBuilderCustomizableContext addBeanNode() {
+      return null;
+    }
+
+    @Override
+    public NodeBuilderCustomizableContext addPropertyNode(String name) {
+      return null;
+    }
+
   }
 
   /**
@@ -176,6 +241,35 @@ public final class ConstraintValidatorContextImpl<A extends Annotation, T>
       return new NodeBuilderDefinedContextImpl(parent, messageTemplate,
           path.appendKey(null, key));
     }
+
+    @Override
+    public ContainerElementNodeBuilderCustomizableContext addContainerElementNode(String name, Class<?> containerType, Integer typeArgumentIndex) {
+      return null;
+    }
+
+    @Override
+    public LeafNodeBuilderCustomizableContext addBeanNode() {
+      return null;
+    }
+
+    @Override
+    public NodeBuilderCustomizableContext addPropertyNode(String name) {
+      return null;
+    }
+  }
+
+  @Override
+  public <T> T unwrap(Class<T> type) {
+    //allow unwrapping into public super types
+    if (type.isAssignableFrom(ConstraintValidatorContext.class)) {
+      return type.cast(this);
+    }
+    return null;
+  }
+
+  @Override
+  public ClockProvider getClockProvider() {
+    return GwtClockProvider.INSTANCE;
   }
 
   private final PathImpl basePath;

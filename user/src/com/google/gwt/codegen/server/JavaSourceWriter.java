@@ -27,9 +27,9 @@ import java.util.regex.Pattern;
  */
 public class JavaSourceWriter extends SourceWriterBase {
 
-  private static final Pattern PKG_REGEX_BOTH = Pattern.compile("(com\\.google|javax?)\\..*");
+  private static final Pattern PKG_REGEX_BOTH = Pattern.compile("(com\\.google|jakarta?)\\..*");
   private static final Pattern PKG_REGEX_GOOGLE = Pattern.compile("com\\.google\\..*");
-  private static final Pattern PKG_REGEX_JAVA = Pattern.compile("javax?\\..*");
+  private static final Pattern PKG_REGEX_JAVA = Pattern.compile("jakarta?\\..*");
 
   private final AbortablePrintWriter printWriter;
 
@@ -58,7 +58,7 @@ public class JavaSourceWriter extends SourceWriterBase {
       println("package " + targetPackageName + ";");
     }
 
-    // Write imports, splitting into com.google, other, and java/javax groups
+    // Write imports, splitting into com.google, other, and java/jakarta groups
     writeImportGroup(imports, PKG_REGEX_GOOGLE, true);
     writeImportGroup(imports, PKG_REGEX_BOTH, false);
     writeImportGroup(imports, PKG_REGEX_JAVA, true);

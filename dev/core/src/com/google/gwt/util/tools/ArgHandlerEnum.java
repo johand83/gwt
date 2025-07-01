@@ -27,7 +27,7 @@ import com.google.gwt.thirdparty.guava.common.collect.FluentIterable;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 
 /**
  * A generic arg handler for options defined by enums.

@@ -286,7 +286,7 @@ java_library(
     ),
     deps = [
         "//third_party/java/hibernate:validator",
-        "//third_party/java/javax_validation",
+        "//third_party/java/jakarta_validation",
         "//third_party/java_src/gwt:gwt-servlet",
     ],
 )
@@ -322,7 +322,7 @@ java_library(
             "src/com/google/web/bindery/**/shared/**/*.java",
             "src/com/google/web/bindery/**/vm/**/*.java",
             "src/com/google/web/bindery/event/shared/**/*.java",
-            "src/javax/validation/**/*_CustomFieldSerializer.java",
+            "src/jakarta/validation/**/*_CustomFieldSerializer.java",
             # Despite the "client" designation, these packages are
             # also reached by server RPC code:
             "src/com/google/gwt/canvas/dom/client/*.java",

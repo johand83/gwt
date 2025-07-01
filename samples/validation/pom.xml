@@ -60,7 +60,7 @@
 
     <!-- Hibernate bean validation binary for the server -->
     <dependency>
-      <groupId>javax.validation</groupId>
+      <groupId>jakarta.validation</groupId>
       <artifactId>validation-api</artifactId>
     </dependency>
     <dependency>
@@ -69,7 +69,7 @@
       <version>4.1.0.Final</version>
       <exclusions>
         <exclusion>
-          <groupId>javax.xml.bind</groupId>
+          <groupId>jakarta.xml.bind</groupId>
           <artifactId>jaxb-api</artifactId>
         </exclusion>
         <exclusion>
@@ -89,7 +89,7 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <groupId>javax.xml.bind</groupId>
+          <groupId>jakarta.xml.bind</groupId>
           <artifactId>jaxb-api</artifactId>
         </exclusion>
         <exclusion>

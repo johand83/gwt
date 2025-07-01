@@ -17,6 +17,6 @@
 @CheckReturnValue(when = When.UNKNOWN)
 package com.google.gwt.dev.jjs.test.usedimports;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.ParametersAreNonnullByDefault;
-import javax.annotation.meta.When;
+import jakarta.annotation.CheckReturnValue;
+import jakarta.annotation.ParametersAreNonnullByDefault;
+import jakarta.annotation.meta.When;
