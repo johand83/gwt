@@ -61,7 +61,7 @@ public class JettyLauncherUtils {
       if (sslLogger.isLoggable(TreeLogger.TRACE)) {
         sslLogger.log(TreeLogger.TRACE, "Using keystore " + sslConfig.getKeyStore());
       }
-      SslContextFactory ssl = new SslContextFactory();
+      SslContextFactory.Server ssl = new SslContextFactory.Server();
       if (sslConfig.getClientAuth() != null) {
         switch (sslConfig.getClientAuth()) {
           case NONE:

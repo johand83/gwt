@@ -38,9 +38,9 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.preventers.AppContextLeakPreventer;
-import org.eclipse.jetty.util.preventers.DOMLeakPreventer;
-import org.eclipse.jetty.util.preventers.GCThreadLeakPreventer;
-import org.eclipse.jetty.util.preventers.SecurityProviderLeakPreventer;
+//import org.eclipse.jetty.util.preventers.DOMLeakPreventer;
+//import org.eclipse.jetty.util.preventers.GCThreadLeakPreventer;
+//import org.eclipse.jetty.util.preventers.SecurityProviderLeakPreventer;
 import org.eclipse.jetty.webapp.ClassMatcher;
 import org.eclipse.jetty.webapp.Configurations;
 import org.eclipse.jetty.webapp.WebAppClassLoader;
@@ -705,7 +705,7 @@ public class JettyLauncher extends ServletContainerLauncher {
      * eventual calls to requestLatency(long) are:
      * - javax.management.remote.rmi.RMIConnectorServer.start()
      */
-    server.addBean(new GCThreadLeakPreventer());
+//    server.addBean(new GCThreadLeakPreventer());
 
     /*
      * Creating a MessageDigest during web application startup initializes the 
@@ -714,13 +714,13 @@ public class JettyLauncher extends ServletContainerLauncher {
      *
      * Instead we initialize JCA right now.
      */
-    server.addBean(new SecurityProviderLeakPreventer());
+//    server.addBean(new SecurityProviderLeakPreventer());
 
     /*
      * Haven't got to the root of what is going on with this leak but if a web app is the first to
      * make the calls below the web application class loader will be pinned in memory.
      */
-    server.addBean(new DOMLeakPreventer());
+//    server.addBean(new DOMLeakPreventer());
   }
 
   private void checkStartParams(TreeLogger logger, int port, File appRootDir) {

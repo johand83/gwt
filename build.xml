@@ -44,7 +44,7 @@
     <call-subproject subproject="servlet" subtarget="build"/>
   </target>
 
-  <target name="dist" depends="build, doc" description="[action] Make all the distributions">
+  <target name="dist" depends="build" description="[action] Make all the distributions">
     <gwt.ant dir="distro-source"/>
   </target>
 

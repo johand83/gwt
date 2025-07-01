@@ -92,17 +92,17 @@
     <requestfactory-jar target="server+src"/>
   </target>
 
-  <target name="requestfactory-server-jakarta" description="Build RequestFactory server jar for jakarta.servlet">
-    <requestfactory-jar target="server-jakarta" main="com.google.web.bindery.requestfactory.server.jakarta.RequestFactoryJarExtractor"/>
-  </target>
+<!--  <target name="requestfactory-server-jakarta" description="Build RequestFactory server jar for jakarta.servlet">-->
+<!--    <requestfactory-jar target="server-jakarta" main="com.google.web.bindery.requestfactory.server.jakarta.RequestFactoryJarExtractor"/>-->
+<!--  </target>-->
 
-  <target name="requestfactory-server-jakarta-src" description="Build RequestFactory server source jar for jakarta.servlet">
-    <requestfactory-jar target="server-jakarta-src" main="com.google.web.bindery.requestfactory.server.jakarta.RequestFactoryJarExtractor"/>
-  </target>
+<!--  <target name="requestfactory-server-jakarta-src" description="Build RequestFactory server source jar for jakarta.servlet">-->
+<!--    <requestfactory-jar target="server-jakarta-src" main="com.google.web.bindery.requestfactory.server.jakarta.RequestFactoryJarExtractor"/>-->
+<!--  </target>-->
 
-  <target name="requestfactory-server-jakarta+src" description="Build RequestFactory server source/class jar for jakarta.servlet">
-    <requestfactory-jar target="server-jakarta+src" main="com.google.web.bindery.requestfactory.server.jakarta.RequestFactoryJarExtractor"/>
-  </target>
+<!--  <target name="requestfactory-server-jakarta+src" description="Build RequestFactory server source/class jar for jakarta.servlet">-->
+<!--    <requestfactory-jar target="server-jakarta+src" main="com.google.web.bindery.requestfactory.server.jakarta.RequestFactoryJarExtractor"/>-->
+<!--  </target>-->
 
   <!-- This target requires classes from ../build/{dev,user}/bin-test -->
   <target name="requestfactory-test"
@@ -116,7 +116,8 @@
   <target name="clientjars" depends="requestfactory-apt,requestfactory-apt-src,requestfactory-client,requestfactory-client-src,requestfactory-client+src" description="Build requestfactory client jars" />
 
   <!-- Build all server jars -->
-  <target name="serverjars" depends="requestfactory-server,requestfactory-server-src,requestfactory-server+src,requestfactory-server-jakarta,requestfactory-server-jakarta-src,requestfactory-server-jakarta+src" description="Build requestfactory server jars" />
+<!--  <target name="serverjars" depends="requestfactory-server,requestfactory-server-src,requestfactory-server+src,requestfactory-server-jakarta,requestfactory-server-jakarta-src,requestfactory-server-jakarta+src" description="Build requestfactory server jars" />-->
+  <target name="serverjars" depends="requestfactory-server,requestfactory-server-src,requestfactory-server+src" description="Build requestfactory server jars" />
 
   <!-- Default target, build client and server jars.
        Assumes the 'user' target has been built in the trunk directory

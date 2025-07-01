@@ -124,7 +124,7 @@ public class WebServer {
     connector.setReuseAddress(true);
     newServer.addConnector(connector);
 
-    ServletContextHandler newHandler = new ServletContextHandler(ServletContextHandler.GZIP);
+    ServletContextHandler newHandler = new ServletContextHandler();
     newHandler.setContextPath("/");
     newHandler.addServlet(new ServletHolder(new HttpServlet() {
       @Override
